@@ -2,5 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 
 # Create your views here.
 def index(request):
-    response = "Hello World"
-    return HttpResponse(response)
+    return render(request, "user_dashboard_app/index.html")
+
+def sign_in(request):
+    return render(request, "user_dashboard_app/signin.html")
