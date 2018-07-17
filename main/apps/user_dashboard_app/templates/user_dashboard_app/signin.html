@@ -42,6 +42,9 @@
                         <label>Password</label>
                         <input type="password" class="form-control" name="password" placeholder="Password">
                     </div>
+                    {% if request.session.errors.password %}
+                        <p class="text-danger">{{request.session.failure}}</p>
+                    {% endif %}
                     <button type="submit" class="btn btn-success">Sign In</button>
                 </form>
             </div>
