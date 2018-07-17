@@ -6,5 +6,7 @@ urlpatterns = [
     url(r'^signin$', views.signin),
     url(r'^loginUser$', views.login_user),
     url(r'^register$', views.register),
-    url(r'^registerUser$', views.register_user)
+    url(r'^registerUser$', views.register_user),
+    url(r'^dashboard/admin$', views.admin),
+    url(r'^logoff$', views.logoff)
 ]
