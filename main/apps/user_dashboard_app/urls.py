@@ -15,6 +15,8 @@ urlpatterns = [
     url(r'^users/edit$', views.edit_profile),
     url(r'^editInfo$', views.edit_information),
     url(r'^changePassword$', views.change_password),
-    url(r'^editDescription$', views.edit_description)
+    url(r'^editDescription$', views.edit_description),
+    url(r'^dashboard$', views.dashboard),
+    url(r'^returnToDashboard$', views.return_to_dashboard)
     # url(r'^users/edit/(?P<id>\d+)', views.edit_user)
 ]

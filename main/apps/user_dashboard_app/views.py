@@ -142,3 +142,23 @@ def edit_profile(request):
         'user': current_user
     }
     return render(request, "user_dashboard_app/edit_profile.html", context)
+
+def dashboard(request):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    users = User.objects.all().values()
+    for user in users:
+        user['created_at'] = user['created_at'].strftime("%B. %d %Y")
+
+    context = {
+        "users": users
+    }
+    
+    return render(request, "user_dashboard_app/dashboard.html", context)
+
+def return_to_dashboard(request):
+    current_user = User.objects.get(id = request.session['user_id'])
+    if current_user.user_level == 9:
+        return redirect('/dashboard/admin')
+    else:
+        return redirect('/dashboard')
