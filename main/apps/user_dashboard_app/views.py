@@ -55,6 +55,29 @@ def edit_information(request):
 
     return redirect('/users/edit')
 
+def edit_information(request, id):
+    request.session['errors'] = User.objects.edit_info_validator(request.POST)
+    if len(request.session['errors']):
+        # if the errors object contains anything, loop through each key-value pair and make a flash message
+        for key, value in request.session['errors'].items():
+            messages.error(request, value)
+        # redirect the user back to the form to fix the errors
+        return redirect('/users/edit/' + id)
+
+    target_id = int(id)
+    target_user = User.objects.get(id = target_id)
+    target_user.first_name = request.POST['first']
+    target_user.last_name = request.POST['last']
+    target_user.email = request.POST['email']
+    if request.POST['level'] == 'Admin':
+        target_user.user_level = 9
+    else:
+        target_user.user_level = 1
+
+    target_user.save()
+
+    return redirect('/users/edit/' + id)
+
 def change_password(request):
     request.session['errors'] = User.objects.change_password_validator(request.POST)
     if len(request.session['errors']):
@@ -70,6 +93,23 @@ def change_password(request):
     current_user.save()
 
     return redirect('/users/edit')
+
+def change_password(request, id):
+    request.session['errors'] = User.objects.change_password_validator(request.POST)
+    if len(request.session['errors']):
+        # if the errors object contains anything, loop through each key-value pair and make a flash message
+        for key, value in request.session['errors'].items():
+            messages.error(request, value)
+        # redirect the user back to the form to fix the errors
+        return redirect('/users/edit/' + id)
+
+    target_id = int(id)
+    target_user = User.objects.get(id = target_id)
+    pw_hash = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt())
+    target_user.password_hash = pw_hash
+    target_user.save()
+
+    return redirect('/users/edit/' + id)
 
 def edit_description(request):
     current_user = User.objects.get(id = request.session['user_id'])
@@ -162,3 +202,11 @@ def return_to_dashboard(request):
         return redirect('/dashboard/admin')
     else:
         return redirect('/dashboard')
+
+def edit_user(request, id):
+    target_id = int(id)
+    target_user = User.objects.get(id = target_id)
+    context = {
+        'user': target_user
+    }
+    return render(request, "user_dashboard_app/edit_user.html", context)
