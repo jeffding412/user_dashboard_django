@@ -19,7 +19,7 @@
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/admin">Dashboard</a>
+                        <a class="nav-link" href="/dashboard/admin">Dashboard</a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="/users/edit">Profile</a>
@@ -34,6 +34,11 @@
         </nav>
         <div class="container-fluid">
             <div class="jumbotron">
+                <div class="row">
+                    <h2 class="col">Manage Users</h2>
+                    <a href="/users/new" class="btn btn-primary col-1">Add new</a>
+                </div>
+
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -57,7 +62,7 @@
                                 {% else %}
                                     <td>normal</td>
                                 {% endif %}
-                                <td><a href="">edit</a> <a href="">remove</a></td>
+                                <td><a href="/users/edit/{{user.id}}" class="btn btn-primary">edit</a> <a href="/delete_user" class="btn btn-danger">remove</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

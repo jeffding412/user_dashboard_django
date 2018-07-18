@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 import re
+import bcrypt
 
 EMAIL_REGEX = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
@@ -27,6 +28,16 @@ class UserManager(models.Manager):
         elif postData['password'] != postData['confirm']:
             errors["confirm"] = "Passwords do not match"
 
+        return errors
+
+    def login_validator(self, postData):
+        errors = {}
+        user = User.objects.filter(email=postData['email'])
+        if not user:
+            errors['failure'] = "No email/password combo"
+        elif not bcrypt.checkpw(postData['password'].encode(), user[0].password_hash.encode()):
+            errors['failure'] = "No email/password combo"
+        
         return errors
 
 class User(models.Model):

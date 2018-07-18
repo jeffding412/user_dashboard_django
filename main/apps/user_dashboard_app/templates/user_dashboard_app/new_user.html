@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Signin Page</title>
+        <title>New User</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -19,36 +19,65 @@
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="/dashboard/admin">Dashboard</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/users/edit">Profile</a>
                     </li>
                 </ul>
                 <span class="navbar-text">
-                    <a href="/signin">
-                        Sign in
+                    <a href="/logoff">
+                        Log off
                     </a>
                 </span>
             </div>
         </nav>
         <div class="container-fluid">
             <div class="jumbotron">
-                <h1>Signin</h1>
-                <form action="/loginUser" method="post">
+                <div class="row">
+                    <h2 class="col">Manage Users</h2>
+                    <a href="/dashboard/admin" class="btn btn-primary col-2">Return to Dashboard</a>
+                </div>
+                <form action="/createNewUser" method="post" class="col-6">
                     {% csrf_token %}
                     <div class="form-group">
                         <label>Email Address:</label>
+                        {% if request.session.errors.email %}
+                            <p class="text-danger">{{request.session.errors.email}}</p>
+                        {% endif %}
                         <input type="text" class="form-control" name="email" placeholder="Enter email">
                     </div>
                     <div class="form-group">
+                        <label>First Name:</label>
+                        {% if request.session.errors.first %}
+                            <p class="text-danger">{{request.session.errors.first}}</p>
+                        {% endif %}
+                        <input type="text" class="form-control" name="first" placeholder="Enter first name">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name:</label>
+                        {% if request.session.errors.last %}
+                            <p class="text-danger">{{request.session.errors.last}}</p>
+                        {% endif %}
+                        <input type="text" class="form-control" name="last" placeholder="Enter last name">
+                    </div>
+                    <div class="form-group">
                         <label>Password</label>
+                        {% if request.session.errors.password %}
+                            <p class="text-danger">{{request.session.errors.password}}</p>
+                        {% endif %}
                         <input type="password" class="form-control" name="password" placeholder="Password">
                     </div>
-                    {% if request.session.errors.failure %}
-                        <p class="text-danger">{{request.session.errors.failure}}</p>
-                    {% endif %}
-                    <button type="submit" class="btn btn-success">Sign In</button>
+                    <div class="form-group">
+                        <label>Password Confirmation</label>
+                        {% if request.session.errors.confirm %}
+                            <p class="text-danger">{{request.session.errors.confirm}}</p>
+                        {% endif %}
+                        <input type="password" class="form-control" name="confirm" placeholder="Confirm password">
+                    </div>
+                    <button type="submit" class="btn btn-success">Create</button>
                 </form>
             </div>
-            <a href="/register">Don't have an account? Register</a>
         </div>
     </body>
 </html>

@@ -8,5 +8,8 @@ urlpatterns = [
     url(r'^register$', views.register),
     url(r'^registerUser$', views.register_user),
     url(r'^dashboard/admin$', views.admin),
-    url(r'^logoff$', views.logoff)
+    url(r'^logoff$', views.logoff),
+    url(r'^users/new$', views.new_user),
+    url(r'^createNewUser$', views.create_new_user)
+    # url(r'^users/edit/(?P<id>\d+))', views.edit_user)
 ]
