@@ -38,6 +38,46 @@ def register_user(request):
 
     return redirect('/dashboard')
 
+def edit_information(request):
+    request.session['errors'] = User.objects.edit_info_validator(request.POST)
+    if len(request.session['errors']):
+        # if the errors object contains anything, loop through each key-value pair and make a flash message
+        for key, value in request.session['errors'].items():
+            messages.error(request, value)
+        # redirect the user back to the form to fix the errors
+        return redirect('/users/edit')
+
+    current_user = User.objects.get(id = request.session['user_id'])
+    current_user.first_name = request.POST['first']
+    current_user.last_name = request.POST['last']
+    current_user.email = request.POST['email']
+    current_user.save()
+
+    return redirect('/users/edit')
+
+def change_password(request):
+    request.session['errors'] = User.objects.change_password_validator(request.POST)
+    if len(request.session['errors']):
+        # if the errors object contains anything, loop through each key-value pair and make a flash message
+        for key, value in request.session['errors'].items():
+            messages.error(request, value)
+        # redirect the user back to the form to fix the errors
+        return redirect('/users/edit')
+
+    current_user = User.objects.get(id = request.session['user_id'])
+    pw_hash = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt())
+    current_user.password_hash = pw_hash
+    current_user.save()
+
+    return redirect('/users/edit')
+
+def edit_description(request):
+    current_user = User.objects.get(id = request.session['user_id'])
+    current_user.description = request.POST['description']
+    current_user.save()
+
+    return redirect('/users/edit')
+
 def login_user(request):
     request.session['errors'] = User.objects.login_validator(request.POST)
     if len(request.session['errors']):
@@ -45,11 +85,11 @@ def login_user(request):
         for key, value in request.session['errors'].items():
             messages.error(request, value)
         # redirect the user back to the form to fix the errors
-        # return redirect('/blog/edit/'+id)
         return redirect('/signin')
     
     user = User.objects.filter(email=request.POST['email'])
     request.session['user_id'] = user[0].id
+
     if user[0].user_level == 9:
         return redirect('/dashboard/admin')
     else:
@@ -60,6 +100,8 @@ def logoff(request):
     return redirect('/')
 
 def admin(request):
+    if not "user_id" in request.session:
+        return redirect('/signin')
     users = User.objects.all().values()
     for user in users:
         user['created_at'] = user['created_at'].strftime("%B. %d %Y")
@@ -88,3 +130,15 @@ def create_new_user(request):
 
     return redirect('/dashboard/admin')
 
+def delete_user(request, id):
+    delete_id = int(id)
+    target_user = User.objects.get(id = delete_id)
+    target_user.delete()
+    return redirect('/dashboard/admin')
+
+def edit_profile(request):
+    current_user = User.objects.get(id = request.session['user_id'])
+    context = {
+        'user': current_user
+    }
+    return render(request, "user_dashboard_app/edit_profile.html", context)

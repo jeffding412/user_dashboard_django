@@ -10,6 +10,11 @@ urlpatterns = [
     url(r'^dashboard/admin$', views.admin),
     url(r'^logoff$', views.logoff),
     url(r'^users/new$', views.new_user),
-    url(r'^createNewUser$', views.create_new_user)
-    # url(r'^users/edit/(?P<id>\d+))', views.edit_user)
+    url(r'^createNewUser$', views.create_new_user),
+    url(r'^delete(?P<id>\d+)$', views.delete_user),
+    url(r'^users/edit$', views.edit_profile),
+    url(r'^editInfo$', views.edit_information),
+    url(r'^changePassword$', views.change_password),
+    url(r'^editDescription$', views.edit_description)
+    # url(r'^users/edit/(?P<id>\d+)', views.edit_user)
 ]
