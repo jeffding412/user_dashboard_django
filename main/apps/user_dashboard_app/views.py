@@ -220,3 +220,6 @@ def show_info(request, id):
     }
     return render(request, "user_dashboard_app/user.html", context)
 
+def post(request, id):
+    # to do
+    return redirect('/users/show/' + id)
