@@ -40,14 +40,34 @@
                 <p>Email address: {{user.email}}</p>
                 <p>Description: {{user.description}}</p>
                 <hr>
-                <form action="/post/{{user.id}}">
+                <form action="/post/{{user.id}}" method="POST">
+                    {% csrf_token %}
                     <div class="form-group">
                         <h3>Leave a message for {{user.first_name}}</h3>
-                        <textarea class="form-control" rows="3" name="post"></textarea>
-                        <br>
-                        <button type="submit" class="btn btn-success">Post</button>
+                        <textarea class="form-control" name="message" rows="3"></textarea>
                     </div>
+                    <button type="submit" class="btn btn-success">Post</button>
                 </form>
+                {% for post in posts %}
+                    <hr>
+                    <h4><a href="/users/show/{{post.poster.id}}">{{post.poster.first_name}} {{post.poster.last_name}}</a> wrote:</h4>
+                    <p><i>{{post.created_at}}</i></p>
+                    <p>{{post.message}}</p>
+                    <div class="container">
+                        {% for comment in post.replies.all %}
+                            <h4><a href="/users/show/{{post.poster.id}}">{{comment.commenter.first_name}} {{comment.commenter.last_name}}</a> wrote:</h4>
+                            <p><i>{{comment.display_time}}</i></p>
+                            <p>{{comment.message}}</p>
+                        {% endfor %}
+                        <form action="/comment/{{user.id}}/{{post.id}}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input class="form-control" name="message" placeholder="write a message"></input>
+                            </div>
+                            <button type="submit" class="btn btn-success">Post</button>
+                        </form>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </body>

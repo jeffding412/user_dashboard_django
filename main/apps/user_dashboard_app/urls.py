@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^returnToDashboard$', views.return_to_dashboard),
     url(r'^users/edit/(?P<id>\d+)$', views.edit_user),
     url(r'^users/show/(?P<id>\d+)$', views.show_info),
-    url(r'^post/(?P<id>\d+)$', views.post)
+    url(r'^post/(?P<id>\d+)$', views.post),
+    url(r'^comment/(?P<user_id>\d+)/(?P<post_id>\d+)$', views.comment)
 ]
