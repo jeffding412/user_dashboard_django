@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
-from .models import User
+from .models import User, Post, Comment
 import bcrypt
 from time import gmtime, strftime
 
@@ -210,3 +210,13 @@ def edit_user(request, id):
         'user': target_user
     }
     return render(request, "user_dashboard_app/edit_user.html", context)
+
+def show_info(request, id):
+    target_id = int(id)
+    target_user = User.objects.get(id = target_id)
+    target_user.created_at = target_user.created_at.strftime("%B %d %Y")
+    context = {
+        'user': target_user
+    }
+    return render(request, "user_dashboard_app/user.html", context)
+

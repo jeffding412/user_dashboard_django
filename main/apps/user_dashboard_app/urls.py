@@ -20,5 +20,7 @@ urlpatterns = [
     url(r'^editDescription$', views.edit_description),
     url(r'^dashboard$', views.dashboard),
     url(r'^returnToDashboard$', views.return_to_dashboard),
-    url(r'^users/edit/(?P<id>\d+)$', views.edit_user)
+    url(r'^users/edit/(?P<id>\d+)$', views.edit_user),
+    url(r'^users/show/(?P<id>\d+)$', views.show_info),
+    url(r'^post/(?P<id>\d+)$', views.post)
 ]

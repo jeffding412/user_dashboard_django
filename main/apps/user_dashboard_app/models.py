@@ -79,3 +79,16 @@ class User(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     objects = UserManager()
+
+class Post(models.Model):
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    poster = models.ForeignKey(User, related_name="posts")
+
+class Comment(models.Model):
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    commenter = models.ForeignKey(User, related_name="comments")
+    post = models.ForeignKey(Post, related_name="replies")
