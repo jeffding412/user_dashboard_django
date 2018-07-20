@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>New User</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>    
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/">Test App</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/returnToDashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/users/edit">Profile</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">
+                    <a href="/logoff">
+                        Log off
+                    </a>
+                </span>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="jumbotron">
+                <div class="row">
+                    <h2 class="col">Manage Users</h2>
+                    <a href="/dashboard/admin" class="btn btn-primary col-2">Return to Dashboard</a>
+                </div>
+                <form action="/createNewUser" method="post" class="col-6">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Email Address:</label>
+                        {% if request.session.errors.email %}
+                            <p class="text-danger">{{request.session.errors.email}}</p>
+                        {% endif %}
+                        <input type="text" class="form-control" name="email" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label>First Name:</label>
+                        {% if request.session.errors.first %}
+                            <p class="text-danger">{{request.session.errors.first}}</p>
+                        {% endif %}
+                        <input type="text" class="form-control" name="first" placeholder="Enter first name">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name:</label>
+                        {% if request.session.errors.last %}
+                            <p class="text-danger">{{request.session.errors.last}}</p>
+                        {% endif %}
+                        <input type="text" class="form-control" name="last" placeholder="Enter last name">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        {% if request.session.errors.password %}
+                            <p class="text-danger">{{request.session.errors.password}}</p>
+                        {% endif %}
+                        <input type="password" class="form-control" name="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label>Password Confirmation</label>
+                        {% if request.session.errors.confirm %}
+                            <p class="text-danger">{{request.session.errors.confirm}}</p>
+                        {% endif %}
+                        <input type="password" class="form-control" name="confirm" placeholder="Confirm password">
+                    </div>
+                    <button type="submit" class="btn btn-success">Create</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
