@@ -3,7 +3,6 @@ from django.contrib import messages
 from .models import User, Post, Comment
 import bcrypt
 from time import gmtime, strftime
-from datetime import datetime
 
 def index(request):
     request.session.clear()
@@ -216,38 +215,11 @@ def show_info(request, id):
     target_id = int(id)
     target_user = User.objects.get(id = target_id)
     target_user.created_at = target_user.created_at.strftime("%B %d %Y")
-    posts = Post.objects.filter(receiver=int(id))
-    for post in posts:
-        # s1 = str(post.created_at)
-        # s2 = str(datetime.now())
-        # FMT = '%H:%M:%S'
-        # tdelta = datetime.strptime(s2, FMT) - datetime.strptime(s1, FMT)
-        # print(tdelta)
-        # #strftime("%B. %d %Y"))
-        # print(s1)
-        # print(s2)
-        comments = post.replies.all()
-        for comment in comments:
-            # still gotta figure out the time problem
-            comment.display_time = comment.created_at.strftime("%B %d %Y")
-            print(comment.display_time)
-            comment.save()
-        post.created_at = post.created_at.strftime("%B %d %Y")
-
     context = {
-        'user': target_user,
-        'posts': posts,
+        'user': target_user
     }
     return render(request, "user_dashboard_app/user.html", context)
 
 def post(request, id):
-    target_user = User.objects.get(id = int(id))
-    post_user = User.objects.get(id = request.session['user_id'])
-    post = Post.objects.create(message=request.POST['message'], poster=post_user, receiver=target_user)
+    # to do
     return redirect('/users/show/' + id)
-
-def comment(request, user_id, post_id):
-    commenter = User.objects.get(id = request.session['user_id'])
-    post = Post.objects.get(id= int(post_id))
-    comment = Comment.objects.create(message=request.POST['message'], commenter=commenter, post=post)
-    return redirect('/users/show/' + user_id)

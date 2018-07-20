@@ -85,12 +85,10 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     poster = models.ForeignKey(User, related_name="posts")
-    receiver = models.ForeignKey(User, related_name="wall_posts")
 
 class Comment(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    display_time = models.DateTimeField(auto_now=True)
     commenter = models.ForeignKey(User, related_name="comments")
     post = models.ForeignKey(Post, related_name="replies")
