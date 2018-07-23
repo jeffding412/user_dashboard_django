@@ -3,6 +3,14 @@ from django.contrib import messages
 from .models import User, Post, Comment
 import bcrypt
 from time import gmtime, strftime
+import hashlib
+from datetime import datetime
+
+def checkUserHash(user_id, user_hash):
+    if hashlib.md5(str(user_id).encode()).hexdigest() != user_hash:
+        return False
+    else:
+        return True
 
 def index(request):
     request.session.clear()
@@ -31,6 +39,7 @@ def register_user(request):
     user = User.objects.create(first_name=request.POST['first'],last_name=request.POST['last'],email=request.POST['email'],password_hash=pw_hash,user_level=level,description="")
 
     request.session['user_id'] = user.id
+    request.session['user_hash'] = hashlib.md5(str(request.session['user_id']).encode()).hexdigest()
 
     # redirect to a success route
     if  user.user_level == 9:
@@ -38,7 +47,12 @@ def register_user(request):
 
     return redirect('/dashboard')
 
-def edit_information(request):
+def edit_my_information(request):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     request.session['errors'] = User.objects.edit_info_validator(request.POST)
     if len(request.session['errors']):
         # if the errors object contains anything, loop through each key-value pair and make a flash message
@@ -56,6 +70,11 @@ def edit_information(request):
     return redirect('/users/edit')
 
 def edit_information(request, id):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     request.session['errors'] = User.objects.edit_info_validator(request.POST)
     if len(request.session['errors']):
         # if the errors object contains anything, loop through each key-value pair and make a flash message
@@ -78,7 +97,12 @@ def edit_information(request, id):
 
     return redirect('/users/edit/' + id)
 
-def change_password(request):
+def change_my_password(request):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     request.session['errors'] = User.objects.change_password_validator(request.POST)
     if len(request.session['errors']):
         # if the errors object contains anything, loop through each key-value pair and make a flash message
@@ -95,6 +119,11 @@ def change_password(request):
     return redirect('/users/edit')
 
 def change_password(request, id):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     request.session['errors'] = User.objects.change_password_validator(request.POST)
     if len(request.session['errors']):
         # if the errors object contains anything, loop through each key-value pair and make a flash message
@@ -112,6 +141,11 @@ def change_password(request, id):
     return redirect('/users/edit/' + id)
 
 def edit_description(request):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     current_user = User.objects.get(id = request.session['user_id'])
     current_user.description = request.POST['description']
     current_user.save()
@@ -129,6 +163,7 @@ def login_user(request):
     
     user = User.objects.filter(email=request.POST['email'])
     request.session['user_id'] = user[0].id
+    request.session['user_hash'] = hashlib.md5(str(request.session['user_id']).encode()).hexdigest()
 
     if user[0].user_level == 9:
         return redirect('/dashboard/admin')
@@ -142,6 +177,9 @@ def logoff(request):
 def admin(request):
     if not "user_id" in request.session:
         return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     users = User.objects.all().values()
     for user in users:
         user['created_at'] = user['created_at'].strftime("%B. %d %Y")
@@ -153,9 +191,19 @@ def admin(request):
     return render(request, "user_dashboard_app/admin.html", context)
 
 def new_user(request):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     return render(request, "user_dashboard_app/new_user.html")
 
 def create_new_user(request):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     request.session['errors'] = User.objects.basic_validator(request.POST)
     if len(request.session['errors']):
         # if the errors object contains anything, loop through each key-value pair and make a flash message
@@ -171,12 +219,22 @@ def create_new_user(request):
     return redirect('/dashboard/admin')
 
 def delete_user(request, id):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     delete_id = int(id)
     target_user = User.objects.get(id = delete_id)
     target_user.delete()
     return redirect('/dashboard/admin')
 
 def edit_profile(request):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     current_user = User.objects.get(id = request.session['user_id'])
     context = {
         'user': current_user
@@ -186,6 +244,9 @@ def edit_profile(request):
 def dashboard(request):
     if not "user_id" in request.session:
         return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     users = User.objects.all().values()
     for user in users:
         user['created_at'] = user['created_at'].strftime("%B. %d %Y")
@@ -197,6 +258,11 @@ def dashboard(request):
     return render(request, "user_dashboard_app/dashboard.html", context)
 
 def return_to_dashboard(request):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     current_user = User.objects.get(id = request.session['user_id'])
     if current_user.user_level == 9:
         return redirect('/dashboard/admin')
@@ -204,6 +270,11 @@ def return_to_dashboard(request):
         return redirect('/dashboard')
 
 def edit_user(request, id):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     target_id = int(id)
     target_user = User.objects.get(id = target_id)
     context = {
@@ -212,14 +283,57 @@ def edit_user(request, id):
     return render(request, "user_dashboard_app/edit_user.html", context)
 
 def show_info(request, id):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
     target_id = int(id)
     target_user = User.objects.get(id = target_id)
     target_user.created_at = target_user.created_at.strftime("%B %d %Y")
+    
+    posts = Post.objects.filter(receiver=int(id))
+    for post in posts:
+        # s1 = str(post.created_at)
+        # s2 = str(datetime.now())
+        # FMT = '%H:%M:%S'
+        # tdelta = datetime.strptime(s2, FMT) - datetime.strptime(s1, FMT)
+        # print(tdelta)
+        # #strftime("%B. %d %Y"))
+        # print(s1)
+        # print(s2)
+        comments = post.replies.all()
+        for comment in comments:
+            # still gotta figure out the time problem
+            comment.display_time = comment.created_at.strftime("%B %d %Y")
+            print(comment.display_time)
+            comment.save()
+        post.created_at = post.created_at.strftime("%B %d %Y")
+    
     context = {
-        'user': target_user
+        'user': target_user,
+        'posts': posts,
     }
     return render(request, "user_dashboard_app/user.html", context)
 
 def post(request, id):
-    # to do
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
+    target_user = User.objects.get(id = int(id))
+    post_user = User.objects.get(id = request.session['user_id'])
+    post = Post.objects.create(message=request.POST['message'], poster=post_user, receiver=target_user)
     return redirect('/users/show/' + id)
+
+def comment(request, user_id, post_id):
+    if not "user_id" in request.session:
+        return redirect('/signin')
+    elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
+        return redirect('/signin')
+
+    commenter = User.objects.get(id = request.session['user_id'])
+    post = Post.objects.get(id= int(post_id))
+    comment = Comment.objects.create(message=request.POST['message'], commenter=commenter, post=post)
+    return redirect('/users/show/' + user_id)
