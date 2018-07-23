@@ -49,9 +49,9 @@ def register_user(request):
 
 def edit_my_information(request):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     request.session['errors'] = User.objects.edit_info_validator(request.POST)
     if len(request.session['errors']):
@@ -71,9 +71,9 @@ def edit_my_information(request):
 
 def edit_information(request, id):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     request.session['errors'] = User.objects.edit_info_validator(request.POST)
     if len(request.session['errors']):
@@ -99,9 +99,9 @@ def edit_information(request, id):
 
 def change_my_password(request):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     request.session['errors'] = User.objects.change_password_validator(request.POST)
     if len(request.session['errors']):
@@ -120,9 +120,9 @@ def change_my_password(request):
 
 def change_password(request, id):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     request.session['errors'] = User.objects.change_password_validator(request.POST)
     if len(request.session['errors']):
@@ -142,9 +142,9 @@ def change_password(request, id):
 
 def edit_description(request):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     current_user = User.objects.get(id = request.session['user_id'])
     current_user.description = request.POST['description']
@@ -176,9 +176,9 @@ def logoff(request):
 
 def admin(request):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     users = User.objects.all().values()
     for user in users:
@@ -192,17 +192,17 @@ def admin(request):
 
 def new_user(request):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     return render(request, "user_dashboard_app/new_user.html")
 
 def create_new_user(request):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     request.session['errors'] = User.objects.basic_validator(request.POST)
     if len(request.session['errors']):
@@ -220,9 +220,9 @@ def create_new_user(request):
 
 def delete_user(request, id):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     delete_id = int(id)
     target_user = User.objects.get(id = delete_id)
@@ -231,9 +231,9 @@ def delete_user(request, id):
 
 def edit_profile(request):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     current_user = User.objects.get(id = request.session['user_id'])
     context = {
@@ -243,9 +243,9 @@ def edit_profile(request):
 
 def dashboard(request):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     users = User.objects.all().values()
     for user in users:
@@ -259,9 +259,9 @@ def dashboard(request):
 
 def return_to_dashboard(request):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     current_user = User.objects.get(id = request.session['user_id'])
     if current_user.user_level == 9:
@@ -271,9 +271,9 @@ def return_to_dashboard(request):
 
 def edit_user(request, id):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     target_id = int(id)
     target_user = User.objects.get(id = target_id)
@@ -284,9 +284,9 @@ def edit_user(request, id):
 
 def show_info(request, id):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     target_id = int(id)
     target_user = User.objects.get(id = target_id)
@@ -318,9 +318,9 @@ def show_info(request, id):
 
 def post(request, id):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     target_user = User.objects.get(id = int(id))
     post_user = User.objects.get(id = request.session['user_id'])
@@ -329,9 +329,9 @@ def post(request, id):
 
 def comment(request, user_id, post_id):
     if not "user_id" in request.session:
-        return redirect('/signin')
+        return redirect('/logoff')
     elif not checkUserHash(request.session['user_id'],request.session['user_hash']):
-        return redirect('/signin')
+        return redirect('/logoff')
 
     commenter = User.objects.get(id = request.session['user_id'])
     post = Post.objects.get(id= int(post_id))
