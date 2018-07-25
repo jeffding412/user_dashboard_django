@@ -13,7 +13,6 @@ def checkUserHash(user_id, user_hash):
         return True
 
 def index(request):
-    request.session.clear()
     return render(request, "user_dashboard_app/index.html")
 
 def signin(request):
